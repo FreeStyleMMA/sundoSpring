@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/data/jpa
+        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <!-- Component Scan -->
+    <context:component-scan base-package="com.example"/>
+
+    <!-- DB 연결 -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+
+		<property name="driverClassName"
+			value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+		<property name="url"
+			value="jdbc:log4jdbc:mysql://localhost:3306/sundostudio"></property>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+
+    <!-- JPA EntityManagerFactory // entity 패키지 스캔 -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com.sundostudio.model"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQL8Dialect"/>
+                <property name="showSql" value="true"/>
+                <property name="generateDdl" value="true"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Transaction Manager -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!-- @Transactional 활성화 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- JPA Repository 활성화 -->
+    <jpa:repositories base-package="com.sundostudio.repository"/>
+</beans>
