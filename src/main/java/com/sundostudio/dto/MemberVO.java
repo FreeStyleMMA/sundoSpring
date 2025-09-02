@@ -9,8 +9,9 @@ public class MemberVO {
 	public String userid;
 	public String userpw;
 	public String username;
-	public String nickname;
+//	public String nickname;
 	public Date regdate;
 	public Date updatedate;
 	public int enabled;
+//	public String role;
 }
