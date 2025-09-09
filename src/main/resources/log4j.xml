@@ -13,7 +13,7 @@
 	</appender>
 
 	<!-- Application Loggers -->
-	<logger name="com.jd.spring">
+	<logger name="com.sundostudio">
 		<level value="info" />
 	</logger>
 
@@ -45,12 +45,15 @@
 		<level value="warn" />
 	</logger>
 
-	<!-- TestController 컨트롤러 때문에 추가함 -->
-	<logger name="com.jd.spring.controller">
+	<!--  컨트롤러 -->
+	<logger name="com.sundostudio.controller">
 		<level value="info" />
 	</logger>
-
-
+	
+	<!--  security -->
+	<logger name="com.sundostudio.security">
+		<level value="info" />
+	</logger>
 
 	<!-- Root Logger -->
 	<root>

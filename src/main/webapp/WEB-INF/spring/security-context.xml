@@ -19,19 +19,19 @@
 	<!-- login/out, 권한,토큰 설정 파트 -->
 	<security:http create-session="stateless"
 		entry-point-ref="authenticationEntryPoint">
-		
+		<!-- 맨 처음으로 JWT 필터 등록 -->
+		<security:custom-filter
+			ref="jwtAuthenticationFilter" before="ANONYMOUS_FILTER" />
 		<!-- 권한 핸들링 -->
-		<security:intercept-url pattern="/all/**"
+		<security:intercept-url pattern="/api/**"
 			access="permitAll" />
-		<security:intercept-url pattern="/member/**"
-			access="hasRole('MEMBER')" />
-		<security:intercept-url pattern="/admin/**"
+		<security:intercept-url pattern="/api/auth" access="permitAll" />
+<!-- 		<security:intercept-url pattern="/member/**" -->
+<!-- 			access="hasRole('MEMBER')" /> -->
+		<security:intercept-url pattern="/equipment/**"
 			access="hasRole('ADMIN')" />
 		<!-- jwt 방식 사용으로 csrf는 off -->
 		<security:csrf disabled="true" />
-		<!-- 맨 처음으로 JWT 필터 등록 -->
-		<security:custom-filter
-			ref="jwtAuthenticationFilter" before="FIRST" />
 	</security:http>
 	
 
@@ -43,7 +43,7 @@
 	<bean id="jwtAuthenticationFilter"
 		class="com.sundostudio.security.JwtFilter" />
 	<bean id="jwtTokenProvider"
-		class="com.sundostudio.security.JwtTokenProvider" />
+		class="com.sundostudio.security.JwtUtil" />
 		
 	<!-- 인증 매니저 -->
 	<security:authentication-manager>
@@ -54,8 +54,5 @@
 				ref="bcryptPasswordEncoder" />
 		</security:authentication-provider>
 	</security:authentication-manager>
-
-
-
 
 </beans>

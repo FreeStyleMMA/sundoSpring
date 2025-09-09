@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class AuthVO {
 	public String userid;
-	public String role;
+	public String authorities;
 }

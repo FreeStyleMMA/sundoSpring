@@ -29,13 +29,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     	AuthVO auth = mapper.getAuthByUserid(userid);
     	
     	//권한 인증을 위한 role 정보 세팅
-        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + auth.getRole());
+        GrantedAuthority authorities = new SimpleGrantedAuthority(auth.getAuthorities());
         
         //jwt 토큰 생성을 위한 User(member) 정보 세팅
     	return new org.springframework.security.core.userdetails.User(
                 user.getUserid(),
                 user.getUserpw(),
-                Collections.singletonList(authority)
+                Collections.singletonList(authorities)
         );
     }
 }

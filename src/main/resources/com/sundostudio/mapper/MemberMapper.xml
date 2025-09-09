@@ -13,7 +13,7 @@
 	</select>
 	
 	<select id = "getAuthByUserid" resultType = "com.sundostudio.dto.AuthVO">
-	SELECT*FROM tbl_member_authorities where userid=#{userid}
+	SELECT*FROM tbl_member_authorities where userid = #{userid}
 	</select>
 	</mapper>
 	

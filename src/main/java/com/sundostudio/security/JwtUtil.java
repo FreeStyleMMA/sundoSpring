@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import com.sundostudio.mapper.MemberMapper;
 
@@ -16,13 +17,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.Setter;
 
-public class JwtTokenProvider {
+@Component
+public class JwtUtil {
 
 	@Setter(onMethod_=@Autowired)
 	MemberMapper mapper;
 	private final String SECRET_KEY = "MySuperSecretKeyForJWTGeneration12345";
 	
-	private final long EXPIRATION = 1000 * 60 * 60;
+	private final long EXPIRATION = 1000 * 60 * 60* 24;
 
 	private Key getKey() {
 		return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
@@ -30,11 +32,11 @@ public class JwtTokenProvider {
 
 	public String generateToken(String username) {
 		
-		String role = mapper.getAuthByUserid(username).getRole();
+		String authorities = mapper.getAuthByUserid(username).getAuthorities();
 		
 		return Jwts.builder()
 				.setSubject(username)
-				.claim("role", role)
+				.claim("authorities", authorities)
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis()+EXPIRATION))
 				.signWith(getKey())
@@ -67,7 +69,6 @@ public class JwtTokenProvider {
     	cookie.setSecure(true);
     	cookie.setPath("/");
     	cookie.setMaxAge(60*60);
-    	
     	response.addCookie(cookie);
     }
  
