@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,26 +79,37 @@ public class MemberController {
 		return ResponseEntity.ok(Map.of("userid", userDetails.getUserid()));
 	}
 	
+
 	
 	@GetMapping("/auth")
 	public ResponseEntity<?> checkRole() {
 		 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		    log.info("SecurityContextHolder auth: " + authentication);
-		log.info("권한 인증 요청 도착");
-		log.info("권한 객체: "+authentication);
+//		log.info("권한 인증 요청 도착");
+//		log.info("권한 객체: "+authentication);
 		  if (authentication == null || !authentication.isAuthenticated()) {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 	                     .body(Map.of("userid", "visitor", "roles", "USER"));
 	        }
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		log.info("검증 아이디: " + userDetails.getUsername());
+//		log.info("검증 아이디: " + userDetails.getUsername());
 		String userid = userDetails.getUsername();
 		
 		// 권한 여러개 가질 수 있기 때문에 리스트로. -> List<String>
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
-		log.info("권한 리스트: "+roles);
+//		log.info("권한 리스트: "+roles);
 		return ResponseEntity.ok(Map.of("userid", userid, "roles", roles));
+	}
+	
+	// 로그아웃 위해서 쿠키 덮어쓰기
+	@GetMapping("/logout")
+	public ResponseEntity<?> logout(HttpServletResponse response) {
+	    Cookie cookie = new Cookie("jwt", null); // 쿠키 이름과 동일하게
+	    cookie.setHttpOnly(true);
+	    cookie.setPath("/"); 
+	    cookie.setMaxAge(0); // 0으로 설정하면 즉시 삭제
+	    response.addCookie(cookie);
+	    return ResponseEntity.ok(Map.of("message", "로그아웃 성공"));
 	}
 }

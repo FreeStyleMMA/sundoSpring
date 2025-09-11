@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-	<mapper namespace="com.sundostudio.mapper.MemberMapper">
-	<insert id="join">
-	INSERT INTO tbl_member(userid,userpw,username,nickname) 
-	values(#{userid},#{userpw},#{username},#{nickname})
-	</insert>
-	
-	<select id="findByUserid" resultType="com.sundostudio.dto.MemberVO">
-	SELECT*FROM tbl_member where userid = #{userid}
-	</select>
-	
-	<select id = "getAuthByUserid" resultType = "com.sundostudio.dto.AuthVO">
-	SELECT*FROM tbl_member_authorities where userid = #{userid}
-	</select>
-	</mapper>
-	
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sundostudio.mapper.MemberMapper">
+    
+    <insert id="signUp">
+        INSERT INTO member (memberName, memberId, memberPw, role)
+        VALUES (#{memberName}, #{memberId}, #{memberPw}, #{role})
+    </insert>
+
+    <select id="findByMemberId" parameterType="string" resultType="com.sundostudio.dto.memberVO">
+        SELECT*from tbl_member
+        FROM member
+        WHERE memberId = #{memberId}
+    </select>
+
+</mapper>
